@@ -4,6 +4,7 @@ const connectDB = require("./configs/db");
 const cookieParser = require("cookie-parser");
 const AuthRouter = require("./routes/auth.route");
 const cors = require("cors");
+const UserRoute = require("./routes/user.route");
 const app = express();
 
 app.use(
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/auth", AuthRouter);
+app.use("/api/user", UserRoute);
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

@@ -8,6 +8,8 @@ import { serverUrl } from "../App";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../../firebase";
 import { ClipLoader } from "react-spinners";
+import { useDispatch } from "react-redux";
+import { setUserData } from "../redux/userSlice";
 
 const SignUp = () => {
   const primaryColor = "#ff4d2d";
@@ -23,6 +25,8 @@ const SignUp = () => {
   const [role, setRole] = useState("user");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
   const handleShowPassword = () => {
     setShowPassword((prev) => !prev);
   };
@@ -35,6 +39,7 @@ const SignUp = () => {
         { fullName, email, password, role, mobile },
         { withCredentials: true }
       );
+      dispatch(setUserData(res.data));
       setError("");
       setLoading(false);
     } catch (error) {
@@ -53,7 +58,6 @@ const SignUp = () => {
       }
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
-      console.log(result);
       const res = await axios.post(
         `${serverUrl}/api/auth/googleAuth`,
         {
@@ -64,6 +68,7 @@ const SignUp = () => {
         },
         { withCredentials: true }
       );
+      dispatch(setUserData(res.data));
       setError("");
       setLoading(false);
     } catch (error) {

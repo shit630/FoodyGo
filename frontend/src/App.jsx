@@ -1,23 +1,37 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import ForgotPassword from "./pages/ForgotPassword";
+import useGetCurrentUser from "./hooks/useGetCurrentUser";
+import { useSelector } from "react-redux";
+import Home from "./pages/Home";
 
 export const serverUrl = "http://localhost:8000";
 
 function App() {
-  const [count, setCount] = useState(0);
-
+  useGetCurrentUser();
+  const { userData } = useSelector((state) => state.user);
+  console.log(userData);
   return (
     <>
       <Routes>
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route
+          path="/signup"
+          element={!userData ? <SignUp /> : <Navigate to={"/"} />}
+        />
+        <Route
+          path="/signin"
+          element={!userData ? <SignIn /> : <Navigate to={"/"} />}
+        />
+        <Route
+          path="/forgotPassword"
+          element={!userData ? <ForgotPassword /> : <Navigate to={"/"} />}
+        />
+        <Route
+          path="/"
+          element={userData ? <Home /> : <Navigate to={"/signIn"} />}
+        />
       </Routes>
     </>
   );
