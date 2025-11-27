@@ -13,7 +13,7 @@ const AuthRouter = express.Router();
 
 AuthRouter.post("/signup", signUp);
 AuthRouter.post("/signin", signIn);
-AuthRouter.post("/signout", signOut);
+AuthRouter.get("/signout", signOut);
 AuthRouter.post("/sendOtp", sendOTP);
 AuthRouter.post("/verifyOtp", verifyOtp);
 AuthRouter.post("/resetPassword", resetPassword);

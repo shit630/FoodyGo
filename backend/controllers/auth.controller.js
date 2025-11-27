@@ -72,7 +72,7 @@ const signIn = async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(201).json({ msg: "Login success", user });
+    res.status(201).json(user);
   } catch (error) {
     res.status(500).json(`Signin error ${error}`);
   }
