@@ -27,52 +27,40 @@ const createAndEditShop = async (req, res) => {
           state,
           address,
           image,
-          owner: req.userId,
         },
         { new: true }
       );
     }
-    await ShopModel.populate("owner");
+    await shop.populate("owner");
+    await shop.populate({
+      path: "items",
+      options: { sort: { updatedAt: -1 } },
+    });
     return res.status(201).json(shop);
   } catch (error) {
     return res.status(500).json({
-      message: `Create and edit shop error ${error}`,
+      message: `Create and edit shop error ${error.message}`,
     });
   }
 };
 
-const editShop = async (req, res) => {
+const getMyShop = async (req, res) => {
   try {
-    const { shopId } = req.params;
-    const { name, city, state, address } = req.body;
-    let shop = await ShopModel.findById(shopId);
-    let image;
-    if (req.file) {
-      image = await uploadOnCludinary(req.file.path);
-    }
-    if (!shop) {
-      return res.status(404).json({
-        message: "Shop not found",
+    const shop = await ShopModel.findOne({ owner: req.userId })
+      .populate("owner")
+      .populate({
+        path: "items",
+        options: { sort: { updatedAt: -1 } },
       });
+    if (!shop) {
+      return null;
     }
-    shop = await ShopModel.findByIdAndUpdate(
-      shopId,
-      {
-        name,
-        city,
-        state,
-        address,
-        image,
-      },
-      { new: true }
-    );
-    await ShopModel.populate("owner");
-    return res.status(201).json(shop);
+    return res.status(200).json(shop);
   } catch (error) {
     return res.status(404).json({
-      message: `Edit shop error ${error}`,
+      message: `Get my shop error ${error}`,
     });
   }
 };
 
-module.exports = { createAndEditShop, editShop };
+module.exports = { createAndEditShop, getMyShop };

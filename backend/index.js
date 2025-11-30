@@ -6,6 +6,7 @@ const AuthRouter = require("./routes/auth.route");
 const cors = require("cors");
 const UserRoute = require("./routes/user.route");
 const ShopRoute = require("./routes/shop.route");
+const ItemRoute = require("./routes/item.route");
 const app = express();
 
 app.use(
@@ -20,6 +21,7 @@ app.use(cookieParser());
 app.use("/api/auth", AuthRouter);
 app.use("/api/user", UserRoute);
 app.use("/api/shop", ShopRoute);
+app.use("/api/item", ItemRoute);
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

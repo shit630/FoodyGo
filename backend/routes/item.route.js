@@ -1,6 +1,11 @@
 const express = require("express");
 const authMiddleware = require("../middleware/auth.middleware");
-const { addItem, editItem } = require("../controllers/item.controller");
+const {
+  addItem,
+  editItem,
+  getItemById,
+  deleteItem,
+} = require("../controllers/item.controller");
 const upload = require("../middleware/multer");
 
 const ItemRoute = express.Router();
@@ -12,5 +17,9 @@ ItemRoute.patch(
   upload.single("image"),
   editItem
 );
+
+ItemRoute.get("/getItemById/:itemId", authMiddleware, getItemById);
+
+ItemRoute.delete("/deleteItem/:itemId", authMiddleware, deleteItem);
 
 module.exports = ItemRoute;

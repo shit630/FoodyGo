@@ -5,6 +5,8 @@ const UserSlice = createSlice({
   initialState: {
     userData: null,
     city: null,
+    state: null,
+    address: null,
   },
   reducers: {
     setUserData: (state, action) => {
@@ -13,8 +15,14 @@ const UserSlice = createSlice({
     setCity: (state, action) => {
       state.city = action.payload;
     },
+    setState: (state, action) => {
+      state.state = action.payload;
+    },
+    setAddress: (state, action) => {
+      state.address = action.payload;
+    },
   },
 });
 
-export const { setUserData, setCity } = UserSlice.actions;
+export const { setUserData, setCity, setState, setAddress } = UserSlice.actions;
 export default UserSlice.reducer;

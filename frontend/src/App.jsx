@@ -7,6 +7,9 @@ import useGetCurrentUser from "./hooks/useGetCurrentUser";
 import { useSelector } from "react-redux";
 import Home from "./pages/Home";
 import useGetCity from "./hooks/useGetCity";
+import CreateAndEditShop from "./pages/CreateAndEditShop";
+import AddFoodItems from "./pages/AddFoodItems";
+import EditFoodItems from "./pages/EditFoodItem";
 
 export const serverUrl = "http://localhost:8000";
 
@@ -33,6 +36,20 @@ function App() {
         <Route
           path="/"
           element={userData ? <Home /> : <Navigate to={"/signIn"} />}
+        />
+        <Route
+          path="/createShop"
+          element={
+            userData ? <CreateAndEditShop /> : <Navigate to={"/signIn"} />
+          }
+        />
+        <Route
+          path="/addFoodItem"
+          element={userData ? <AddFoodItems /> : <Navigate to={"/signIn"} />}
+        />
+        <Route
+          path="/editFoodItem/:itemId"
+          element={userData ? <EditFoodItems /> : <Navigate to={"/signIn"} />}
         />
       </Routes>
     </>

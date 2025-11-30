@@ -3,6 +3,7 @@ const authMiddleware = require("../middleware/auth.middleware");
 const {
   createAndEditShop,
   editShop,
+  getMyShop,
 } = require("../controllers/shop.controller");
 const upload = require("../middleware/multer");
 
@@ -14,11 +15,7 @@ ShopRoute.post(
   upload.single("image"),
   createAndEditShop
 );
-ShopRoute.patch(
-  "/editShop/:shopId",
-  authMiddleware,
-  upload.single("image"),
-  editShop
-);
+
+ShopRoute.get("/getMyShop", authMiddleware, getMyShop);
 
 module.exports = ShopRoute;

@@ -9,10 +9,14 @@ const uploadOnCludinary = async (file) => {
   });
   try {
     const res = await cloudinary.uploader.upload(file);
-    fs.unlinkSync(file);
+    if (fs.existsSync(file)) {
+      fs.unlinkSync(file);
+    }
     return res.secure_url;
   } catch (error) {
-    fs.unlinkSync(file);
+    if (fs.existsSync(file)) {
+      fs.unlinkSync(file);
+    }
     console.log(error);
   }
 };

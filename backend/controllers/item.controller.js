@@ -24,7 +24,15 @@ const addItem = async (req, res) => {
       shop: shop._id,
     });
 
-    return res.status(201).json(item);
+    shop.items.push(item._id);
+    await shop.save();
+    await shop.populate("owner");
+    await shop.populate({
+      path: "items",
+      options: { sort: { updatedAt: -1 } },
+    });
+
+    return res.status(201).json(shop);
   } catch (error) {
     return res.status(500).json({
       message: `Add item error ${error}`,
@@ -58,7 +66,12 @@ const editItem = async (req, res) => {
       });
     }
 
-    return res.status(201).json(item);
+    const shop = await ShopModel.findOne({ owner: req.userId }).populate({
+      path: "items",
+      options: { sort: { updatedAt: -1 } },
+    });
+
+    return res.status(201).json(shop);
   } catch (error) {
     return res.status(500).json({
       message: `Edit item error ${error}`,
@@ -66,4 +79,47 @@ const editItem = async (req, res) => {
   }
 };
 
-module.exports = { addItem, editItem };
+const getItemById = async (req, res) => {
+  try {
+    const { itemId } = req.params;
+    const item = await ItemModel.findById(itemId);
+    if (!item) {
+      return res.status(400).json({
+        message: "Item not found",
+      });
+    }
+
+    return res.status(200).json(item);
+  } catch (error) {
+    return res.status(500).json({
+      message: `Get single item error ${error}`,
+    });
+  }
+};
+
+const deleteItem = async (req, res) => {
+  try {
+    const { itemId } = req.params;
+    const item = await ItemModel.findByIdAndDelete(itemId);
+    if (!item) {
+      return res.status(400).json({
+        message: "Item not found",
+      });
+    }
+
+    const shop = await ShopModel.findOne({ owner: req.userId });
+    shop.items = shop.items.filter((item) => item._id != itemId);
+    await shop.save();
+    await shop.populate({
+      path: "items",
+      options: { sort: { updatedAt: -1 } },
+    });
+    return res.status(200).json(shop);
+  } catch (error) {
+    return res.status(500).json({
+      message: `Delete item error ${error}`,
+    });
+  }
+};
+
+module.exports = { addItem, editItem, getItemById, deleteItem };
